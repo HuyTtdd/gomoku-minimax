@@ -1,7 +1,6 @@
-### Cài đặt Flask để sử dụng GUI
+### Install Flask packet
 - ```pip install Flask```
 
-### Hướng dẫn mở GUI sau khi cài Flask
-- Chạy ```python gui.py```
-- Mở trình duyệt vào url: ```http://0.0.0.0:5000/```
-- Click chuột vào các ô để chơi
+### Run
+- Run ```python gui.py```
+- Go to ```http://0.0.0.0:5000/``` in browser
