@@ -1,0 +1,44 @@
+.square {
+    position: absolute;
+    border: solid black 1px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    font-size: 35px;
+    text-align: center;
+}
+
+#board {
+    position: absolute;
+    top: 10%;
+    left: 30%;
+    transform: translate(-50%,-50%);
+}
+
+#turn {
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    transform: translate(-50%,-50%);
+    font-size: 50px;
+}
+
+#msg {
+    position: absolute;
+    left: 50%;
+    top: 95%;
+    transform: translate(-50%,-50%);
+    font-size: 50px;
+}
+
+#new-game {
+    border: solid black 1px;
+    padding: 10px;
+    background-color: white;
+    color: green;
+    cursor: pointer;
+    position: absolute;
+    left: 75%;
+    top: 25%;
+    font-size: 35px;
+}

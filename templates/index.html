@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Caro</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body style="background-color: lightgray;">
+    <div id="turn">Your turn.</div>
+    <table id="board">
+
+    </table>
+    <div id="msg"></div>
+    <div id="new-game">New Game</div>
+
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery-3.4.1.min.js')}}"></script>
+    <script type="text/javascript">
+        let $SCRIPT_ROOT = {{ request.script_root | tojson | safe
+        }};
+        let is_thinking = false;
+        let end = false;
+
+
+        let set_msg = function (code, sign) {
+            if (code == 5) {
+                end = true;
+                $("#msg").text(sign + " win.");
+            }
+            if (code == 6) {
+                end = true;
+                $("#msg").text("Draw.");
+            }
+        }
+
+        $("#new-game").on("click", function () {
+            clear_board();
+            $("#turn").text("Your turn.");
+            $("#msg").text("");
+            is_thinking = false;
+            end = false;
+
+            $.ajax({
+                type: "POST",
+                url: $SCRIPT_ROOT + "/refresh/"
+            });
+        })
+
+        $(".square").on("click", function () {
+            if (end == true) {
+                $("#turn").text("Click new game.")
+                return;
+            }
+
+            $("#msg").text("");
+
+            if (is_thinking == true) {
+                $("#turn").text("Bot is thinking");
+                return;
+            }
+
+
+            let position = $(this).prop("className");
+
+            let Bot = function () {
+                is_thinking = true;
+                $.ajax({
+                    type: "POST",
+                    url: $SCRIPT_ROOT + "/bot/",
+                    success: function (data) {
+                        square = ".square." + data.row + "-" + data.column;
+
+                        $(square).append(data.sign);
+                        $(square).css("color", "crimson");
+
+                        $("#turn").text("Your turn.");
+                        set_msg(data.code, data.sign);
+
+                        is_thinking = false;
+                    }
+                });
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: $SCRIPT_ROOT + "/play/",
+                data: JSON.stringify(position, null, '\t'),
+                contentType: 'application/json;charset=UTF-8',
+                success: function (data) {
+                    if (data.code != -1) {
+                        square = ".square." + data.row + "-" + data.column;
+
+                        $(square).append(data.sign);
+                        $(square).css("color", "slateblue");
+
+                        if (data.code == 1) {
+                            $("div#turn").text("Bot's turn.");
+                            Bot();
+                        }
+
+                        set_msg(data.code, data.sign);
+                    } else {
+                        $("#msg").text("Invalid move");
+                    }
+                }
+            });
+        });
+
+        $(window).on('load', function () {
+            $.ajax({
+                type: "POST",
+                url: $SCRIPT_ROOT + "/refresh/"
+            });
+        });
+    </script>
+</body>
+
+</html>
