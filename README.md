@@ -1,4 +1,4 @@
-### Install Flask packet
+### Install Flask
 - ```pip install Flask```
 
 ### Run
